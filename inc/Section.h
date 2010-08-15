@@ -1,5 +1,8 @@
 
 
+#ifndef _SECTION_H_
+#define _SECTION_H_
+
 class Section
 {
 public:
@@ -15,3 +18,6 @@ private:
 	//! Is this section a junction
     bool m_bIsThisSectionJunction;
 };
+
+
+#endif

@@ -5,15 +5,21 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../src/CollisionAvoidance.cpp \
-../src/Section.cpp 
+../src/ControlStation.cpp \
+../src/Section.cpp \
+../src/Train.cpp 
 
 OBJS += \
 ./src/CollisionAvoidance.o \
-./src/Section.o 
+./src/ControlStation.o \
+./src/Section.o \
+./src/Train.o 
 
 CPP_DEPS += \
 ./src/CollisionAvoidance.d \
-./src/Section.d 
+./src/ControlStation.d \
+./src/Section.d \
+./src/Train.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
