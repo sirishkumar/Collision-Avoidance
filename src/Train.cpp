@@ -1,6 +1,10 @@
+
+#include <syslog.h>
+
 #include "Common.h"
 #include "Train.h"
 
+#include <iostream>
 
 Train::Train( TrainInfo & oTrainInfo )
  : m_u32Location(0),
@@ -8,6 +12,11 @@ Train::Train( TrainInfo & oTrainInfo )
    m_oTrainInfo( oTrainInfo )
 {
 
+}
+
+void Train::Run(){
+
+    std::cout<<"Running Train";
 }
 
 void Train::vUpdateLocation(unsigned int u32Location)

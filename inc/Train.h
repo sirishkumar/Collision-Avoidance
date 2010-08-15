@@ -17,6 +17,8 @@ public:
     unsigned int u32GetSpeed() const;
     void vSetSpeed(unsigned int u32Speed);
 
+    void Run();
+
 private:
 
     void vUpdateLocation( unsigned int u32Location );

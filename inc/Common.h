@@ -29,6 +29,31 @@ public:
   unsigned int m_u32CurrentLocation;
   //! Route of the train is stored here
   std::vector<Section> m_lsPath;
+
+  float m_fMass;
+  short m_u16Priority;
+
+  void vSetMass( float fMass ){
+    m_fMass = fMass;
+  }
+
+  float fGetMass() const{
+
+	  return m_fMass;
+  }
+
+  void setPriority( short u16Priority ){
+	  m_u16Priority = u16Priority;
+  }
+
+  short u16GetPriority() const{
+
+    return m_u16Priority;
+  }
+
+
+
+
 };
 
 #endif
