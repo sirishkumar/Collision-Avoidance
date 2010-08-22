@@ -60,7 +60,7 @@ public:
 
    TrainInfo* poGetTrainInfoHoldingThisSection() const;
 
-   Section(){}
+   Section();
 
 private:
 

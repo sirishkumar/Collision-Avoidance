@@ -5,7 +5,8 @@
 #include "ControlStation.h"
 #include "Common.h"
 #include "Train.h"
-
+#include <boost/interprocess/ipc/message_queue.hpp>
+using namespace boost::interprocess;
 
 using namespace std;
 
@@ -157,3 +158,14 @@ void ControlStation::vUpDateUIWithUnavailability( unsigned int Section, TrainInf
 {
 }
 
+
+void ControlStation::vSendMessageToTrain( std:string &pszTrainName, void*msg, enMessageType enType)
+{
+	message_queue *m_poMQ = new message_queue(open_only, pszTrainName.szName.c_str(), 1024, 1024);
+	Message *msg = new Message;
+
+	msg->enType = enType;
+	msg->m_pomsg = msg;
+
+	m_poMQ->send();
+}

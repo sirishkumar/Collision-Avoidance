@@ -7,19 +7,23 @@
 
 #include <iostream>
 
+
+using namespace boost::interprocess;
+
+
 Train::Train( TrainInfo & oTrainInfo , ControlStation *poControlStation)
  : m_u32CurrentLocation(0),
    m_u32Speed(0),
    m_oTrainInfo( oTrainInfo ),
    m_poControlStation( poControlStation )
 {
-
+	m_poMQ = new message_queue(create_only, oTrainInfo.szName.c_str(), 1024, 1024);
 }
 
 void Train::Run(){
 
-    std::cout<<"Running Train";
-    sleep(100);
+
+	std::cout<<"Running Train";
 }
 
 void Train::vUpdateLocation(unsigned int u32Location)

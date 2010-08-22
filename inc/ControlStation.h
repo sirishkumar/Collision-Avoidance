@@ -40,6 +40,7 @@ private:
 
 
  	void vUpDateUIWithUnavailability( unsigned int Section, TrainInfo & oTrainInfo);
+ 	void vSendMessageToTrain( std:string &pszTrainName, void*msg, enMessageType enType);
 
 public:
  	//! Control station constructur

@@ -7,6 +7,7 @@
 #include <Section.h>
 
 #include "Common.h"
+#include <boost/interprocess/ipc/message_queue.hpp>
 
 class ControlStation;
 
@@ -40,6 +41,7 @@ private:
 	TrainInfo m_oTrainInfo;
 	//! POinter to control station
 	ControlStation * m_poControlStation;
+	boost::interprocess::message_queue *m_poMQ;
 };
 
 
