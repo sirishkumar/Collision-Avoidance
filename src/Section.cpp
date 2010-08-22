@@ -10,4 +10,20 @@ m_bIsThisSectionJunction(bIsJunction)
 {
 	syslog( LOG_INFO, "Initialising  Section %d", m_u32Id);
 
+ 	m_lsTrackLock = new boost::mutex();
+
 }
+
+
+void Section::vLock()
+{
+	m_lsTrackLock->lock();
+}
+
+
+void Section::vUnLock()
+{
+	m_lsTrackLock->unlock();
+}
+
+

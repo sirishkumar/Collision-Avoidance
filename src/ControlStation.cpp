@@ -8,17 +8,14 @@
 
 using namespace std;
 
-using namespace boost::interprocess;
 
-ControlStation::ControlStation( std::string szName, std::vector<int> &refolsTracks ):
+ControlStation::ControlStation( std::string szName, std::vector<Section> &refolsSections  ):
 m_szName( szName ),
-m_lsTracks( refolsTracks ){
+m_lsTracks( refolsSections ){
 
 }
 
 bool ControlStation::bInitControlStation(){
-
-	return bInitializeTrackMutex( m_lsTracks );
 }
 
 enTrainInstallStatus ControlStation::enInstallTrain( TrainInfo & oTrainInfo ){
@@ -29,8 +26,12 @@ enTrainInstallStatus ControlStation::enInstallTrain( TrainInfo & oTrainInfo ){
 
 	if( m_lsTrains.find( oTrainInfo.szName.c_str() ) == m_lsTrains.end() ){
 
-		m_lsTrains[ oTrainInfo.szName.c_str() ] = new Train(oTrainInfo);
-		enInsStatus = TR_INS_SUCCESS;
+		if( bGetClearance( *(oTrainInfo.m_lsPath.begin()) ) )
+		{
+
+      		m_lsTrains[ oTrainInfo.szName.c_str() ] = new Train(oTrainInfo,this);
+		    enInsStatus = TR_INS_SUCCESS;
+		}
 	}
 	else
 	{
@@ -46,22 +47,15 @@ enTrainInstallStatus ControlStation::enInstallTrain( TrainInfo & oTrainInfo ){
 	return enInsStatus;
 }
 
-bool ControlStation::bInitializeTrackMutex( std::vector<int> &refolsTracks ){
-
-	for( vector<int>::const_iterator it = refolsTracks.begin(); it != refolsTracks.end(); it++ )
-		m_lsTracksLocks[*it] = new interprocess_mutex;
-
-	return true;
-}
-
 
 bool ControlStation::bGetClearance( unsigned int u32Track ){
-	m_lsTracksLocks[u32Track]->lock();
+	m_lsTracks[u32Track].vLock();
+
+
 }
 
 void ControlStation::vReleaseClearance( unsigned int u32Track ){
-
-	m_lsTracksLocks[u32Track]->unlock();
+	m_lsTracks[u32Track].vUnLock();
 }
 
 
@@ -70,3 +64,5 @@ void ControlStation::vStopAllTrains(){
 	m_gTrains.interrupt_all();
 	m_gTrains.join_all();
 }
+
+

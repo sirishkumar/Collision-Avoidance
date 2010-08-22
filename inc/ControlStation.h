@@ -4,35 +4,53 @@
 
 #include "Common.h"
 #include "Train.h"
+#include "Section.h"
 #include <map>
 
 #include <string>
-#include <boost/interprocess/sync/scoped_lock.hpp>
-#include <boost/interprocess/sync/interprocess_mutex.hpp>
+
 
 //! Thread Handling
 #include <boost/thread/thread.hpp>
 
+/*!
+ * @brief Control Station is repponsible for launching and controlling trains
+ */
 class ControlStation{
 
 private:
+	//! NAme of the controlling station
     std::string m_szName;
+    //! List of trains started by this station
  	std::map<std::string,Train *>  m_lsTrains;
- 	std::map<unsigned int ,boost::interprocess::interprocess_mutex *>  m_lsTracksLocks;
- 	 std::vector<int> m_lsTracks;
 
+ 	//! List of tracks present and their status
+ 	std::vector<Section> m_lsTracks;
+
+ 	//! Thread group which runs the threads in background
  	boost::thread_group m_gTrains;
 
 public:
-	ControlStation( std::string szControlStationName, std::vector<int> &refolsTracks );
+ 	//! Control station constructur
+	ControlStation( std::string szControlStationName, std::vector<Section> &refolsSections );
 
+    /*!
+     *  @brief Install new with TrainInfo oTrainInfo
+     */
 	enTrainInstallStatus enInstallTrain(  TrainInfo & oTrainInfo );
+
+	//! Remove an exisitng train
 	bool bRemoveTrain();
-	bool bInitializeTrackMutex( std::vector<int> &refolsTracks );
+
+    //! Initalize function for control station
 	bool bInitControlStation();
 
+	//! Checks whether a train can be installed as per the requirement
 	bool bGetClearance( unsigned int u32Track );
+	//! not used
     void vReleaseClearance( unsigned int u32Track );
+
+    //! Stop all trains
     void vStopAllTrains();
 };
 

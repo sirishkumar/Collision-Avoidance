@@ -8,16 +8,24 @@
 
 #include "Common.h"
 
+class ControlStation;
+
 class Train{
 
 public:
 
-    Train( TrainInfo &oTrainInfo  );
 
-    unsigned int u32GetSpeed() const;
+	//! Train constructor
+	Train( TrainInfo &oTrainInfo ,ControlStation *poControlStation );
+
+
+	unsigned int u32GetSpeed() const;
     void vSetSpeed(unsigned int u32Speed);
 
+    //! Thread call back function. Train runs in this loop
     void Run();
+
+    bool bCheckWhetherTrainCanBeInstalled( TrainInfo & refoTrain );
 
 private:
 
@@ -26,6 +34,8 @@ private:
 	unsigned int m_u32Speed;
 	unsigned int m_u32Location;
 	TrainInfo m_oTrainInfo;
+	//! POinter to control station
+	ControlStation * m_poControlStation;
 };
 
 
