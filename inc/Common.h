@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "Section.h"
-
 
 #define MIN_LOCKS_REQUIRED_TO_INSTALL 4
 
@@ -19,6 +17,14 @@ enum enTrainInstallStatus{
 	TR_INS_FAILURE
 };
 
+enum enTrainSpeed
+{
+	SPEED_APPLY_EMERGENCY_BRAKES,
+    SPEED_APPLY_BRAKES,
+    SPEED_SLOW,
+    SPEED_MEDIUM,
+    SPEED_MAX
+};
 
 class TrainInfo
 {

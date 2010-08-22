@@ -5,6 +5,9 @@
 
 
 #include <boost/thread/mutex.hpp>
+#include <boost/thread/recursive_mutex.hpp>
+
+#include "Common.h"
 
 
 /*!
@@ -38,14 +41,24 @@ public:
 	   return m_u32LenthOfTheSection;
    }
 
-   bool vGetIsJunction() const
+   bool bGetIsJunction() const
    {
 	   return m_bIsThisSectionJunction;
    }
 
-   void vLock();
+   bool bGetIsSectionBusy(){
+	   return m_bIsSectionBusy;
+   }
+
+   void vSetSectionBusy(){
+	   m_bIsSectionBusy = true;
+   }
+
+   bool bLock( TrainInfo & oTrainInfo );
 
    void vUnLock();
+
+   TrainInfo* poGetTrainInfoHoldingThisSection() const;
 
    Section(){}
 
@@ -57,11 +70,16 @@ private:
 	unsigned int m_u32LenthOfTheSection;
 	//! Is this section a junction
     bool m_bIsThisSectionJunction;
+    //! Is Section Currently Busy( i.e., A train is running on thie section )
+    bool m_bIsSectionBusy;
 
     //! @todo Mutex are only needed for junctions
  	//! Locks for Junctions
- 	boost::mutex  *m_lsTrackLock;
+ 	boost::recursive_mutex  *m_lsTrackLock;
 
+
+ 	//! Hold the information of the train which runs on this section
+ 	TrainInfo * m_poTrainWhichHoldsSection;
 };
 
 

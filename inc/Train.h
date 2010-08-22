@@ -18,9 +18,13 @@ public:
 	//! Train constructor
 	Train( TrainInfo &oTrainInfo ,ControlStation *poControlStation );
 
-
 	unsigned int u32GetSpeed() const;
     void vSetSpeed(unsigned int u32Speed);
+
+    unsigned int u32GetLocation() const
+    {
+       return m_u32CurrentLocation;
+    }
 
     //! Thread call back function. Train runs in this loop
     void Run();
@@ -32,7 +36,7 @@ private:
     void vUpdateLocation( unsigned int u32Location );
 
 	unsigned int m_u32Speed;
-	unsigned int m_u32Location;
+	unsigned int m_u32CurrentLocation;
 	TrainInfo m_oTrainInfo;
 	//! POinter to control station
 	ControlStation * m_poControlStation;

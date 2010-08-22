@@ -5,9 +5,11 @@
 #include "Common.h"
 #include "Train.h"
 #include "Section.h"
+
 #include <map>
 
 #include <string>
+#include <boost/thread/mutex.hpp>
 
 
 //! Thread Handling
@@ -15,6 +17,10 @@
 
 /*!
  * @brief Control Station is repponsible for launching and controlling trains
+ *
+ * 1. Installs a train
+ * 2. Gives information about all trains running along with their location
+ * 3.
  */
 class ControlStation{
 
@@ -29,6 +35,11 @@ private:
 
  	//! Thread group which runs the threads in background
  	boost::thread_group m_gTrains;
+
+ 	boost::mutex  *m_lsClearanceLock;
+
+
+ 	void vUpDateUIWithUnavailability( unsigned int Section, TrainInfo & oTrainInfo);
 
 public:
  	//! Control station constructur
@@ -46,7 +57,7 @@ public:
 	bool bInitControlStation();
 
 	//! Checks whether a train can be installed as per the requirement
-	bool bGetClearance( unsigned int u32Track );
+	enTrainSpeed enGetClearance( TrainInfo & oTrainInfo );
 	//! not used
     void vReleaseClearance( unsigned int u32Track );
 

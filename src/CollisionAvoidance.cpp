@@ -63,6 +63,7 @@ int main() {
 
 	std::vector<int> route;
 	vGetTestTrackForTrain(route);
+	oTrainInfo.m_u32CurrentLocation = 3;
 	oTrainInfo.m_lsPath = route;
 
 	oStation.enInstallTrain(oTrainInfo);

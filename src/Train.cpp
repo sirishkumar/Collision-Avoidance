@@ -8,7 +8,7 @@
 #include <iostream>
 
 Train::Train( TrainInfo & oTrainInfo , ControlStation *poControlStation)
- : m_u32Location(0),
+ : m_u32CurrentLocation(0),
    m_u32Speed(0),
    m_oTrainInfo( oTrainInfo ),
    m_poControlStation( poControlStation )
@@ -24,8 +24,7 @@ void Train::Run(){
 
 void Train::vUpdateLocation(unsigned int u32Location)
 {
-	m_u32Location =  u32Location;
-
+	m_u32CurrentLocation =  u32Location;
 }
 
 unsigned int Train::u32GetSpeed() const{
