@@ -48,13 +48,14 @@ enTrainInstallStatus ControlStation::enInstallTrain( TrainInfo & oTrainInfo ){
 	}
 
 	if( enInsStatus == TR_INS_SUCCESS ){
-		std::cout<<"Running Train";
-		syslog (LOG_INFO," TR_INS_SUCCESS ", oTrainInfo.szName.c_str());
+		syslog (LOG_INFO," TR_INS_SUCCESS -> %s", oTrainInfo.szName.c_str());
 		m_gTrains.add_thread(new boost::thread(boost::bind(&Train::Run,m_lsTrains[ oTrainInfo.szName ])));
+
+       vSimulateLocationSubsystem(oTrainInfo);
 	}
 	else
 	{
-       //! Train Insatallation failed.
+       //! Train Installation failed.
 	}
 
 	return enInsStatus;
@@ -141,16 +142,17 @@ enTrainSpeed ControlStation::enGetClearance(  TrainInfo & oTrainInfo ){
 }
 
 
-
 void ControlStation::vReleaseClearance( unsigned int u32Track ){
 	m_lsTracks[u32Track].vUnLock();
 }
 
 
-void ControlStation::vStopAllTrains(){
+void ControlStation::vStopAllTrains()
+{
 
-	m_gTrains.interrupt_all();
+	//m_gTrains.interrupt_all();
 	m_gTrains.join_all();
+	std::cout<<"\n Stopped All trains";
 }
 
 
@@ -159,13 +161,21 @@ void ControlStation::vUpDateUIWithUnavailability( unsigned int Section, TrainInf
 }
 
 
-void ControlStation::vSendMessageToTrain( std:string &pszTrainName, void*msg, enMessageType enType)
+void ControlStation::vSimulateLocationSubsystem( TrainInfo &refTrainInfo)
 {
-	message_queue *m_poMQ = new message_queue(open_only, pszTrainName.szName.c_str(), 1024, 1024);
-	Message *msg = new Message;
+	Train *poTrain = m_lsTrains[ refTrainInfo.szName.c_str() ];
 
-	msg->enType = enType;
-	msg->m_pomsg = msg;
+	LocationUpdate oLocationUpdate;
 
-	m_poMQ->send();
+	Message oMsg;
+	oMsg.enType = MSG_LOCATION;
+
+	for( vector<int>::const_iterator it = refTrainInfo.m_lsPath.begin(); it != refTrainInfo.m_lsPath.end();it++ )
+	{
+		oLocationUpdate.m_u32CurrentSection = *it;
+		syslog (LOG_INFO," Simulate Location %d ",  *it);
+		oMsg.m_pomsg = &oLocationUpdate;
+		poTrain->vPutMessageToQueue(oMsg);
+	}
 }
+

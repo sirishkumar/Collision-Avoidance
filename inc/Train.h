@@ -5,9 +5,13 @@
 
 #include <vector>
 #include <Section.h>
+#include <queue>
+#include <string>
+#include <boost/thread/locks.hpp>
+#include <boost/thread/thread.hpp>
 
 #include "Common.h"
-#include <boost/interprocess/ipc/message_queue.hpp>
+#include "Message.h"
 
 class ControlStation;
 
@@ -32,16 +36,28 @@ public:
 
     bool bCheckWhetherTrainCanBeInstalled( TrainInfo & refoTrain );
 
+    //! Message are processed in this function( Location Subsystem etc..,)
+    void vProcessMessage( Message &poMsg );
+
+    //! Called when there is message for train. This queues message to m_lsMessageQueue
+    void vPutMessageToQueue( Message &refMsg );
+
 private:
 
+    //! This function is called on update from location subsystem
     void vUpdateLocation( unsigned int u32Location );
+
 
 	unsigned int m_u32Speed;
 	unsigned int m_u32CurrentLocation;
 	TrainInfo m_oTrainInfo;
 	//! POinter to control station
 	ControlStation * m_poControlStation;
-	boost::interprocess::message_queue *m_poMQ;
+	std::queue<Message>  m_lsMessageQueue;
+	boost::mutex m_mutexQ;               // mutex protecting the queue
+	boost::condition_variable m_condQ;
+	//! If Train reaches destination set this
+	bool m_bStopped;
 };
 
 

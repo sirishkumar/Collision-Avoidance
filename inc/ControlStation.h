@@ -40,7 +40,7 @@ private:
 
 
  	void vUpDateUIWithUnavailability( unsigned int Section, TrainInfo & oTrainInfo);
- 	void vSendMessageToTrain( std:string &pszTrainName, void*msg, enMessageType enType);
+    void vSendMessageToTrain( std::string &pszTrainName, void*msg, enMessageType enType);
 
 public:
  	//! Control station constructur
@@ -61,6 +61,8 @@ public:
 	enTrainSpeed enGetClearance( TrainInfo & oTrainInfo );
 	//! not used
     void vReleaseClearance( unsigned int u32Track );
+
+    void vSimulateLocationSubsystem( TrainInfo &refTrainInfo);
 
     //! Stop all trains
     void vStopAllTrains();
