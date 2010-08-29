@@ -26,6 +26,13 @@ enum enTrainSpeed
     SPEED_MAX
 };
 
+
+enum enMessageType{
+
+	MSG_INFO,
+	MSG_LOCATION
+};
+
 class TrainInfo
 {
 public:
