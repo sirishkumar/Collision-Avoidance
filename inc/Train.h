@@ -40,6 +40,7 @@ private:
 	TrainInfo m_oTrainInfo;
 	//! POinter to control station
 	ControlStation * m_poControlStation;
+	//vector<>
 };
 
 
