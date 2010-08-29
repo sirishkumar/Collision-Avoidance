@@ -80,10 +80,10 @@ bool Train::bCheckWhetherTrainCanBeInstalled( TrainInfo & refoTrain ){
 
 void Train::vPutMessageToQueue( Message &refMsg )
 {
-	{
+//	{
 		boost::mutex::scoped_lock lock(m_mutexQ);
      	m_lsMessageQueue.push(refMsg);
-	}
+//	}
 
 	m_condQ.notify_one();
 
