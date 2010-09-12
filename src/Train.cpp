@@ -26,6 +26,8 @@ Train::Train( TrainInfo & oTrainInfo , ControlStation *poControlStation)
 
 void Train::Run(){
 
+	std::vector<Section> & lsSections = m_poControlStation->lsGetSections();
+	bLockNextComingJunction(lsSections,*m_oTrainInfo.m_lsPath.begin(),true);
 
 	std::cout<<"\n"<<m_oTrainInfo.szName<< ": Running Train ";
 
@@ -133,7 +135,7 @@ void Train::vUpdateLocation(unsigned int u32Location)
 	syslog (LOG_INFO," Location of Train %s : %d  ",  m_oTrainInfo.szName.c_str(), u32Location );
 }
 
-bool Train::bLockNextComingJunction(std::vector<Section> & lsSections,unsigned int u32NextSection )
+bool Train::bLockNextComingJunction(std::vector<Section> & lsSections,unsigned int u32NextSection, bool bIsFirstCall )
 {
 	vector<int> &reflsPath = m_oTrainInfo.m_lsPath;
 
@@ -146,7 +148,10 @@ bool Train::bLockNextComingJunction(std::vector<Section> & lsSections,unsigned i
        {
            //! Lock entry lock of next junction
     	   lsSections[*it].bLock(m_oTrainInfo);
-    	   m_NextJunctionEntryLock = &lsSections[*it];
+    	   if( bIsFirstCall )
+    		   m_prCurrentJunctionLock = &lsSections[*it];
+    	   else
+    	       m_NextJunctionEntryLock = &lsSections[*it];
     	   cout<<"\n Locking next entry junction " <<*it;
     	   break;
        }

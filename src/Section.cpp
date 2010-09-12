@@ -64,7 +64,7 @@ bool Section::bLock( TrainInfo & oTrainInfo )
 
 void Section::vUnLock()
 {
-	std::cout<<"\n Section "<< m_u32Id << "UnLocked by "<<m_poTrainWhichHoldsSection->szName;
+	std::cout<<"\n Section "<< m_u32Id << " UnLocked by "<<m_poTrainWhichHoldsSection->szName;
 	m_lsTrackLock->unlock();
 	m_poTrainWhichHoldsSection = 0;
 }

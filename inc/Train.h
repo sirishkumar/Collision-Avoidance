@@ -43,7 +43,7 @@ public:
     void vPutMessageToQueue( Message &refMsg );
 
     //! Function which acquires next coming junctions entry lock
-    bool bLockNextComingJunction(std::vector<Section> & lsSections,unsigned int);
+    bool bLockNextComingJunction(std::vector<Section> & lsSections,unsigned int u32NextSection, bool bIsFirstCall = false);
 private:
 
     //! This function is called on update from location subsystem
