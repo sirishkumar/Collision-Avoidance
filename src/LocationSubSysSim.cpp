@@ -7,6 +7,7 @@
 
 #include "LocationSubSysSim.h"
 
+LocationSubSysSim  LocationSubSysSim::m_oLocSim;
 
 LocationSubSysSim::LocationSubSysSim()
 {}

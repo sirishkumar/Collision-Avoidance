@@ -68,7 +68,7 @@ public:
     void vStopAllTrains();
 
     //! Get function for list of sections
-    std::vector<Section> & lsGetSections() const
+    std::vector<Section>& lsGetSections()
     {
     	return m_lsTracks;
     }

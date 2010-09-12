@@ -1,7 +1,8 @@
+#include <syslog.h>
 
 #include "Common.h"
 #include "Section.h"
-
+#include "iostream"
 
 Section::Section( unsigned int u32Id,unsigned int u32Lenth,bool bIsJunction)
 :m_u32Id(u32Id),
@@ -21,16 +22,17 @@ Section::Section()
  m_bIsThisSectionJunction(false),
  m_poTrainWhichHoldsSection(0)
 {
-
+	m_lsTrackLock = new boost::recursive_mutex();
 }
 
 bool Section::bTryLock( TrainInfo & oTrainInfo )
 {
 	bool bIsJunctionUnLocked = false;
 
-	if( ( bIsJunctionLocked == m_lsTrackLock->try_lock() ) )
+	syslog (LOG_INFO,"\n Section %d",m_u32Id);
+
+	if( ( bIsJunctionUnLocked = m_lsTrackLock->try_lock() ) )
 	{
-		bIsJunctionUnLocked  = true;
 		 m_lsTrackLock->unlock();
 	}
 
@@ -39,12 +41,9 @@ bool Section::bTryLock( TrainInfo & oTrainInfo )
 
 bool Section::bLock( TrainInfo & oTrainInfo )
 {
-	bool bIsJunctionLocked = false;
+	bool bIsJunctionLocked = true;
 
-	if( ( bIsJunctionLocked == m_lsTrackLock->lock() ) )
-	{
-	   m_poTrainWhichHoldsSection = &oTrainInfo;
-	}
+	m_lsTrackLock->lock();
 
    return bIsJunctionLocked;
 }

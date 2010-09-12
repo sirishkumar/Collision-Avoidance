@@ -42,6 +42,8 @@ public:
     //! Called when there is message for train. This queues message to m_lsMessageQueue
     void vPutMessageToQueue( Message &refMsg );
 
+    //! Function which acquires next coming junctions entry lock
+    bool bLockNextComingJunction(std::vector<Section> & lsSections,unsigned int);
 private:
 
     //! This function is called on update from location subsystem

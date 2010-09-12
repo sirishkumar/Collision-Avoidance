@@ -22,7 +22,7 @@ void vGetTestSections( std::vector<Section> &lsSections  )
 {
     Section oSection;
 
-   for( int i = 0;i<10;i++)
+   for( int i = 0;i<40;i++)
    {
 	   oSection.vSetId(i);
 	   oSection.vSetIsJunction(false);
@@ -33,17 +33,31 @@ void vGetTestSections( std::vector<Section> &lsSections  )
 
 
    lsSections[5].vSetIsJunction(true);
-   lsSections[8].vSetIsJunction(true);
+   lsSections[6].vSetIsJunction(true);
+
+   lsSections[12].vSetIsJunction(true);
+   lsSections[13].vSetIsJunction(true);
+
+   lsSections[1].vSetIsJunction(true);
+   lsSections[24].vSetIsJunction(true);
+
+   lsSections[17].vSetIsJunction(true);
+   lsSections[18].vSetIsJunction(true);
+
+   lsSections[27].vSetIsJunction(true);
+   lsSections[28].vSetIsJunction(true);
+   lsSections[29].vSetIsJunction(true);
+   lsSections[30].vSetIsJunction(true);
+
+
 }
 
 void vGetTestTrackForTrain( std::vector<int> &refTracks )
 {
-   refTracks.push_back(3);
-   refTracks.push_back(4);
-   refTracks.push_back(5);
-   refTracks.push_back(6);
-   refTracks.push_back(7);
-   refTracks.push_back(8);
+  refTracks.clear();
+
+  for(int i = 2;i<16;i++)
+	refTracks.push_back(i);
 }
 
 int main() {
@@ -63,12 +77,10 @@ int main() {
 
 	std::vector<int> route;
 	vGetTestTrackForTrain(route);
-	oTrainInfo.m_u32CurrentLocation = 3;
+	oTrainInfo.m_u32CurrentLocation = 2;
 	oTrainInfo.m_lsPath = route;
 
 	oStation.enInstallTrain(oTrainInfo);
-
-	//sleep(1000);
 
 	oStation.vStopAllTrains();
 

@@ -52,11 +52,13 @@ enTrainInstallStatus ControlStation::enInstallTrain( TrainInfo & oTrainInfo ){
 		enInsStatus = TR_INS_ALREADY_INSTALLED;
 	}
 
-	if( enInsStatus == TR_INS_SUCCESS ){
+	if( enInsStatus == TR_INS_SUCCESS )
+	{
+		cout<<"\n TR_INS_SUCCESS -> "<<oTrainInfo.szName.c_str();
 		syslog (LOG_INFO," TR_INS_SUCCESS -> %s", oTrainInfo.szName.c_str());
 		m_gTrains.add_thread(new boost::thread(boost::bind(&Train::Run,m_lsTrains[ oTrainInfo.szName ])));
 
-       vSimulateLocationSubsystem(oTrainInfo);
+        vSimulateLocationSubsystem(oTrainInfo);
 	}
 	else
 	{
@@ -79,7 +81,7 @@ enTrainSpeed ControlStation::enGetClearance(  TrainInfo & oTrainInfo ){
 	for( int i = 0; i<4 && it != oTrainInfo.m_lsPath.end();it++,i++ )
 	{
          NextFourSection[i] = *it;
-         std::cout<<"\n Next Section "<<*it;
+         //std::cout<<"\n Next Section "<<*it;
 	}
 
     if ( NextFourSection[0] != -1 && m_lsTracks[NextFourSection[0]].poGetTrainInfoHoldingThisSection() != 0 )
@@ -99,7 +101,7 @@ enTrainSpeed ControlStation::enGetClearance(  TrainInfo & oTrainInfo ){
     {
     	if( m_lsTracks[NextFourSection[1]].bGetIsJunction() )
     	{
-    		if ( !(m_lsTracks[NextFourSection[1]].bLock( oTrainInfo )))
+    		if ( !(m_lsTracks[NextFourSection[1]].bTryLock( oTrainInfo )))
     		{
                 vUpDateUIWithUnavailability( NextFourSection[1], oTrainInfo );
     		}
@@ -112,7 +114,7 @@ enTrainSpeed ControlStation::enGetClearance(  TrainInfo & oTrainInfo ){
     {
     	if( m_lsTracks[NextFourSection[2]].bGetIsJunction() )
     	{
-    		if ( ! m_lsTracks[NextFourSection[2]].bLock(oTrainInfo ) )
+    		if ( ! m_lsTracks[NextFourSection[2]].bTryLock(oTrainInfo ) )
     		{
                 vUpDateUIWithUnavailability( NextFourSection[2], oTrainInfo );
     		}
@@ -134,7 +136,7 @@ enTrainSpeed ControlStation::enGetClearance(  TrainInfo & oTrainInfo ){
     {
     	if( m_lsTracks[NextFourSection[3]].bGetIsJunction() )
     	{
-    		if ( ! m_lsTracks[NextFourSection[3]].bLock( oTrainInfo ) )
+    		if ( ! m_lsTracks[NextFourSection[3]].bTryLock( oTrainInfo ) )
     		{
                 vUpDateUIWithUnavailability( NextFourSection[3], oTrainInfo );
     		}
@@ -170,16 +172,17 @@ void ControlStation::vSimulateLocationSubsystem( TrainInfo &refTrainInfo)
 {
 	Train *poTrain = m_lsTrains[ refTrainInfo.szName.c_str() ];
 
-	LocationUpdate oLocationUpdate;
 
-	Message oMsg;
-	oMsg.enType = MSG_LOCATION;
 
 	for( vector<int>::const_iterator it = refTrainInfo.m_lsPath.begin(); it != refTrainInfo.m_lsPath.end();it++ )
 	{
-		oLocationUpdate.m_u32CurrentSection = *it;
+		Message oMsg;
+		oMsg.enType = MSG_LOCATION;
+		LocationUpdate *poLocationUpdate = new LocationUpdate;
+		poLocationUpdate->m_u32CurrentSection = *it;
 		syslog (LOG_INFO," Simulate Location %d ",  *it);
-		oMsg.m_pomsg = &oLocationUpdate;
+		//std::cout<<"\n Simulate Location "<<poLocationUpdate->m_u32CurrentSection;
+		oMsg.m_pomsg = poLocationUpdate;
 		poTrain->vPutMessageToQueue(oMsg);
 	}
 }
