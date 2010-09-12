@@ -24,11 +24,24 @@ Section::Section()
 
 }
 
+bool Section::bTryLock( TrainInfo & oTrainInfo )
+{
+	bool bIsJunctionUnLocked = false;
+
+	if( ( bIsJunctionLocked == m_lsTrackLock->try_lock() ) )
+	{
+		bIsJunctionUnLocked  = true;
+		 m_lsTrackLock->unlock();
+	}
+
+   return bIsJunctionUnLocked;
+}
+
 bool Section::bLock( TrainInfo & oTrainInfo )
 {
 	bool bIsJunctionLocked = false;
 
-	if( ( bIsJunctionLocked == m_lsTrackLock->try_lock() ) )
+	if( ( bIsJunctionLocked == m_lsTrackLock->lock() ) )
 	{
 	   m_poTrainWhichHoldsSection = &oTrainInfo;
 	}

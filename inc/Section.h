@@ -54,6 +54,8 @@ public:
 	   m_bIsSectionBusy = true;
    }
 
+   bool bTryLock( TrainInfo & oTrainInfo );
+
    bool bLock( TrainInfo & oTrainInfo );
 
    void vUnLock();
@@ -61,6 +63,7 @@ public:
    TrainInfo* poGetTrainInfoHoldingThisSection() const;
 
    Section();
+
 
 private:
 

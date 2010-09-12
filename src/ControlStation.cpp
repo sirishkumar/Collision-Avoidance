@@ -23,7 +23,7 @@ bool ControlStation::bInitControlStation(){
 
 enTrainInstallStatus ControlStation::enInstallTrain( TrainInfo & oTrainInfo ){
 
-	enTrainInstallStatus enInsStatus;
+	enTrainInstallStatus enInsStatus = TR_INS_FAILURE;
 	enTrainSpeed enSpeed;
 
 	syslog (LOG_INFO,"ControlStation::enInstallTrain:%s ", oTrainInfo.szName.c_str());
@@ -40,6 +40,11 @@ enTrainInstallStatus ControlStation::enInstallTrain( TrainInfo & oTrainInfo ){
 
       		m_lsTrains[ oTrainInfo.szName.c_str() ] = new Train(oTrainInfo,this);
 		    enInsStatus = TR_INS_SUCCESS;
+		}
+		else
+		{
+			cout<<"\n Train Installation failed because a train is either running in next four sections or one of the junction is locked";
+			enInsStatus = TR_INS_TRACK_BUSY;
 		}
 	}
 	else

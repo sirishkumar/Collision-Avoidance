@@ -60,6 +60,11 @@ private:
 	//! If Train reaches destination set this
 	bool m_bStopped;
 
+	//! Junction lock on which train is currently running
+	Section * m_prCurrentJunctionLock;
+	//! Next junction entry lock
+	Section * m_NextJunctionEntryLock;
+
 };
 
 

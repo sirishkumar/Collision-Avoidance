@@ -16,7 +16,9 @@ Train::Train( TrainInfo & oTrainInfo , ControlStation *poControlStation)
    m_u32Speed(0),
    m_oTrainInfo( oTrainInfo ),
    m_poControlStation( poControlStation ),
-   m_bStopped(false)
+   m_bStopped(false),
+   m_prCurrentJunctionLock(0),
+   m_NextJunctionEntryLock(0)
 {
 }
 
@@ -51,9 +53,67 @@ void Train::vProcessMessage( Message &oMsg )
 
 void Train::vUpdateLocation(unsigned int u32Location)
 {
+	std::vector<Section> & lsSections = m_poControlStation->lsGetSections();
+
+	//! If previous section was a junction release the lock
+	if( lsSections[m_u32CurrentLocation].bGetIsJunction() && m_prCurrentJunctionLock )
+	{
+       m_prCurrentJunctionLock->vUnLock();
+       m_prCurrentJunctionLock = 0;
+	}
+
 	m_u32CurrentLocation =  u32Location;
 
+	//! if the second section from current section is junction lock the exit junction and also the next entry junction
+    if(  m_u32CurrentLocation+2 <= *(m_oTrainInfo.m_lsPath.end()-1 ) )
+    {
+
+		if( lsSections[m_u32CurrentLocation+2].bGetIsJunction() )
+		{
+			//! Check whether we have exit lock else stop and wait for the junction lock
+			std::cout<<"\n Check lock for Junction "<<m_u32Id;
+
+			if( lsSections[m_u32CurrentLocation+3].bTryLock(m_oTrainInfo) == true )
+			{
+				std::cout<<"\n Junction "<<m_u32Id<<" Not Locked. Free to proceed";
+			}
+			else
+			{
+				//! TO be sent to location subsystem
+				vSetSpeed(0);
+				std::cout<<"\n Junction "<<m_u32Id << " is locked. Waiting for lock";
+				lsSections[m_u32CurrentLocation+3].bLock(m_oTrainInfo);
+				std::cout<<"\n Junction "<<m_u32Id<<" UnLocked. Free to proceed";
+				lsSections[m_u32CurrentLocation+3].vUnLock();
+				//! TO be sent to location subsystem
+				vSetSpeed(m_u32Speed);
+			}
+
+			bLockNextComingJunction(lsSections);
+
+		}
+    }
+
+    //! Update Speed of train to location subsystem
+    enTrainSpeed enSpeed = m_poControlStation->enGetClearance();
+    vSetSpeed(enTrainSpeed);
+
+
 	syslog (LOG_INFO," Location of Train %s : %d  ",  m_oTrainInfo.szName.c_str(), u32Location );
+}
+
+bool Train::bLockNextComingJunction(std::vector<Section> & lsSections)
+{
+	vector<int> &reflsPath = m_oTrainInfo.m_lsPath;
+
+	//! +4 is next non-junction section
+	for( vector<int>::const_iterator it = reflsPath.begin()+4 ;it != reflsPath.end();it++ )
+	{
+       if( lsSections[*it].bGetIsJunction() )
+       {
+
+       }
+	}
 }
 
 unsigned int Train::u32GetSpeed() const{
@@ -63,6 +123,7 @@ unsigned int Train::u32GetSpeed() const{
 
 void Train::vSetSpeed(unsigned int u32Speed){
 
+  cout<<"\n Speed of Train set to "<< u32Speed;
   m_u32Speed = u32Speed;
 }
 

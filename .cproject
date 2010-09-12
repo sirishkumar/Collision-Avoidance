@@ -1029,6 +1029,7 @@
 <tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.release.1716986475" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.release">
 <option id="gnu.cpp.link.option.libs.178538031" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 <listOptionValue builtIn="false" value="pthread"/>
+<listOptionValue builtIn="false" value="boost_system"/>
 <listOptionValue builtIn="false" value="boost_thread"/>
 </option>
 <option id="gnu.cpp.link.option.paths.1124894213" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">

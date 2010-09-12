@@ -6,6 +6,7 @@
 CPP_SRCS += \
 ../src/CollisionAvoidance.cpp \
 ../src/ControlStation.cpp \
+../src/LocationSubSysSim.cpp \
 ../src/Message.cpp \
 ../src/Section.cpp \
 ../src/Train.cpp 
@@ -13,6 +14,7 @@ CPP_SRCS += \
 OBJS += \
 ./src/CollisionAvoidance.o \
 ./src/ControlStation.o \
+./src/LocationSubSysSim.o \
 ./src/Message.o \
 ./src/Section.o \
 ./src/Train.o 
@@ -20,6 +22,7 @@ OBJS += \
 CPP_DEPS += \
 ./src/CollisionAvoidance.d \
 ./src/ControlStation.d \
+./src/LocationSubSysSim.d \
 ./src/Message.d \
 ./src/Section.d \
 ./src/Train.d 
