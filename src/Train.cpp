@@ -27,7 +27,7 @@ Train::Train( TrainInfo & oTrainInfo , ControlStation *poControlStation)
 void Train::Run(){
 
 
-	std::cout<<"\nRunning Train";
+	std::cout<<"\n"<<m_oTrainInfo.szName<< ": Running Train ";
 
 	while( !m_bStopped){
 
@@ -60,7 +60,7 @@ void Train::vUpdateLocation(unsigned int u32Location)
 {
 	std::vector<Section> & lsSections = m_poControlStation->lsGetSections();
 
-	std::cout<<"\n Location Update "<< u32Location;
+	std::cout<<"\n"<<m_oTrainInfo.szName<< ": Location Update "<< u32Location;
 
 	//! If previous section was a junction release the lock
 	if( lsSections[m_u32CurrentLocation].bGetIsJunction() && m_prCurrentJunctionLock )
@@ -84,19 +84,19 @@ void Train::vUpdateLocation(unsigned int u32Location)
 		if( lsSections[*(it+1)].bGetIsJunction() )
 		{
 			//! Check whether we have exit lock else stop and wait for the junction lock, exit lock is after entry section
-			std::cout<<"\n Check Exit lock for Junction "<<*(it+2);
+			std::cout<<"\n"<<m_oTrainInfo.szName<< ":  Check Exit lock for Junction "<<*(it+2);
 
 			if( lsSections[*(it+2)].bTryLock(m_oTrainInfo) == true )
 			{
-				std::cout<<"\n Junction "<< *(it+2)<<" Not Locked. Free to proceed";
+				std::cout<<"\n"<<m_oTrainInfo.szName<< ":  Junction "<< *(it+2)<<" Not Locked. Free to proceed";
 			}
 			else
 			{
 				//! TO be sent to location subsystem
 				vSetSpeed(0);
-				std::cout<<"\n Junction "<<*(it+2) << " is locked. Waiting for lock";
+				std::cout<<"\n"<<m_oTrainInfo.szName<< ":  Junction "<<*(it+2) << " is locked. Waiting for lock";
 				lsSections[*(it+2)].bLock(m_oTrainInfo);
-				std::cout<<"\n Junction "<<*(it+2)<<" UnLocked. Free to proceed";
+				std::cout<<"\n"<<m_oTrainInfo.szName<< ":  Junction "<<*(it+2)<<" UnLocked. Free to proceed";
 				lsSections[*(it+2)].vUnLock();
 				//! TO be sent to location subsystem
 				vSetSpeed(m_u32Speed);
@@ -115,7 +115,7 @@ void Train::vUpdateLocation(unsigned int u32Location)
     }
     else
     {
-    	cout<<"\n Train "<< m_oTrainInfo.szName <<" reached destination";
+    	cout<<"\n"<<m_oTrainInfo.szName<< ":  Train "<< m_oTrainInfo.szName <<" reached destination";
 
     	//! If there are any locks release them
     	if( m_prCurrentJunctionLock )
@@ -160,7 +160,7 @@ unsigned int Train::u32GetSpeed() const{
 
 void Train::vSetSpeed(unsigned int u32Speed){
 
-  cout<<"\n Speed of Train set to "<< u32Speed;
+  cout<<"\n"<<m_oTrainInfo.szName<< ":  Speed of Train set to "<< u32Speed;
   m_u32Speed = u32Speed;
 }
 

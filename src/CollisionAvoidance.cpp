@@ -60,16 +60,26 @@ void vGetTestTrackForTrain( std::vector<int> &refTracks )
 	refTracks.push_back(i);
 }
 
+void vGetTestTrackForTrain2( std::vector<int> &refTracks )
+{
+  refTracks.clear();
+
+  for(int i = 16;i>=2;i--)
+	refTracks.push_back(i);
+}
+
 int main() {
 	openlog ("CollAvo: ", LOG_PID,LOG_USER);
 	setlogmask (LOG_UPTO(LOG_INFO));
 	syslog (LOG_INFO,"Starting Collision Detection System Control Station");
+
 
 	std::vector<Section> lsTracks;
 	vGetTestSections(lsTracks);
 
 	ControlStation oStation("Hyderabad",lsTracks);
 
+	//! Train 1
 	TrainInfo oTrainInfo;
 	oTrainInfo.id = 10;
 	oTrainInfo.szName = "Hyd Exp";
@@ -81,6 +91,20 @@ int main() {
 	oTrainInfo.m_lsPath = route;
 
 	oStation.enInstallTrain(oTrainInfo);
+
+	//! Train 1
+	TrainInfo oTrainInfo2;
+	oTrainInfo2.id = 11;
+	oTrainInfo2.szName = "Bglr Exp";
+	oTrainInfo2.m_u32Length = 1;
+
+	std::vector<int> route2;
+	vGetTestTrackForTrain2(route2);
+	oTrainInfo2.m_u32CurrentLocation = 2;
+	oTrainInfo2.m_lsPath = route2;
+
+	oStation.enInstallTrain(oTrainInfo2);
+
 
 	oStation.vStopAllTrains();
 

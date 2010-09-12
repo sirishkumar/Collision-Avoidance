@@ -3,6 +3,7 @@
 #include "Common.h"
 #include "Section.h"
 #include "iostream"
+#include "string.h"
 
 Section::Section( unsigned int u32Id,unsigned int u32Lenth,bool bIsJunction)
 :m_u32Id(u32Id),
@@ -43,13 +44,27 @@ bool Section::bLock( TrainInfo & oTrainInfo )
 {
 	bool bIsJunctionLocked = true;
 
+
+	if( m_poTrainWhichHoldsSection && ( m_poTrainWhichHoldsSection->szName == oTrainInfo.szName ) )
+	{
+		return bIsJunctionLocked;
+	}
+
+	if( m_poTrainWhichHoldsSection )
+	{
+	   std::cout<<"\n Section "<< m_u32Id << " is alreay Locked by "<< m_poTrainWhichHoldsSection->szName;
+	}
+
 	m_lsTrackLock->lock();
+	std::cout<<"\n Section "<< m_u32Id << "Locked by "<<oTrainInfo.szName;
+	m_poTrainWhichHoldsSection = &oTrainInfo;
 
    return bIsJunctionLocked;
 }
 
 void Section::vUnLock()
 {
+	std::cout<<"\n Section "<< m_u32Id << "UnLocked by "<<m_poTrainWhichHoldsSection->szName;
 	m_lsTrackLock->unlock();
 	m_poTrainWhichHoldsSection = 0;
 }
