@@ -56,7 +56,7 @@ void vGetTestTrackForTrain( std::vector<int> &refTracks )
 {
   refTracks.clear();
 
-  for(int i = 1;i<16;i++)
+  for(int i = 5;i<16;i++)
 	refTracks.push_back(i);
 }
 
@@ -67,7 +67,8 @@ void vGetTestTrackForTrain2( std::vector<int> &refTracks )
 //  for(int i = 16;i>=2;i--)
 //	refTracks.push_back(i);
 
-  for(int i = 2;i<=16;i++)
+
+  for(int i = 1;i<=16;i++)
 	refTracks.push_back(i);
 
 }
@@ -97,18 +98,18 @@ int main() {
 
 	oStation.enInstallTrain(oTrainInfo);
 
-//	//! Train 1
-//	TrainInfo oTrainInfo2;
-//	oTrainInfo2.id = 11;
-//	oTrainInfo2.szName = "Train 2";
-//	oTrainInfo2.m_u32Length = 1;
-//
-//	std::vector<int> route2;
-//	vGetTestTrackForTrain2(route2);
-//	oTrainInfo2.m_u32CurrentLocation = 2;
-//	oTrainInfo2.m_lsPath = route2;
-//
-//	oStation.enInstallTrain(oTrainInfo2);
+	//! Train 1
+	TrainInfo oTrainInfo2;
+	oTrainInfo2.id = 11;
+	oTrainInfo2.szName = "Train 2";
+	oTrainInfo2.m_u32Length = 1;
+
+	std::vector<int> route2;
+	vGetTestTrackForTrain2(route2);
+	oTrainInfo2.m_u32CurrentLocation = 2;
+	oTrainInfo2.m_lsPath = route2;
+
+	oStation.enInstallTrain(oTrainInfo2);
 
 
 	oStation.vStopAllTrains();

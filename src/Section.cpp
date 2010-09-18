@@ -22,7 +22,8 @@ Section::Section()
 :m_u32Id(0),
  m_u32LenthOfTheSection(0),
  m_bIsThisSectionJunction(false),
- m_poTrainWhichHoldsSection(0)
+ m_poTrainWhichHoldsSection(0),
+ m_poTrainWhichHoldsTheLock(0)
 {
 	m_lsTrackLock = new boost::recursive_mutex();
 }
