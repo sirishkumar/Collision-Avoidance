@@ -19,6 +19,7 @@ class Train{
 
 public:
 
+	TrainInfo m_oTrainInfo;
 
 	//! Train constructor
 	Train( TrainInfo &oTrainInfo ,ControlStation *poControlStation );
@@ -52,7 +53,6 @@ private:
 
 	unsigned int m_u32Speed;
 	unsigned int m_u32CurrentLocation;
-	TrainInfo m_oTrainInfo;
 	//! POinter to control station
 	ControlStation * m_poControlStation;
 

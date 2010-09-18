@@ -64,6 +64,13 @@ public:
 
    Section();
 
+   bool bAmIHoldingTheSection( TrainInfo * poTrainInfo );
+   bool bAmIHoldingTheSectionLock( TrainInfo * poTrainInfo );
+
+   bool bSetTrain(TrainInfo * poTrainInfo );
+   void vReleaseSection( TrainInfo * poTrainInfo  );
+
+
 
 private:
 
@@ -83,6 +90,7 @@ private:
 
  	//! Hold the information of the train which runs on this section
  	TrainInfo * m_poTrainWhichHoldsSection;
+ 	TrainInfo * m_poTrainWhichHoldsTheLock;
 };
 
 

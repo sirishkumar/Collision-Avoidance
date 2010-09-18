@@ -5,6 +5,7 @@
 #include "Common.h"
 #include "Train.h"
 #include "Section.h"
+#include "Timer.h"
 
 #include <map>
 
@@ -38,6 +39,11 @@ private:
 
  	boost::mutex  *m_lsClearanceLock;
 
+ 	//! For Location simulation
+ 	event_timer<ControlStation> * m_et;
+    asio::io_service io_service;
+    boost::thread *m_posimASIOThread;
+
 
  	void vUpDateUIWithUnavailability( unsigned int Section, TrainInfo & oTrainInfo);
     void vSendMessageToTrain( std::string &pszTrainName, void*msg, enMessageType enType);
@@ -46,6 +52,7 @@ public:
  	//! Control station constructur
 	ControlStation( std::string szControlStationName, std::vector<Section> &refolsSections );
 
+	~ControlStation();
     /*!
      *  @brief Install new with TrainInfo oTrainInfo
      */
@@ -72,6 +79,9 @@ public:
     {
     	return m_lsTracks;
     }
+
+    void vOnTimeOut();
+
 };
 
 

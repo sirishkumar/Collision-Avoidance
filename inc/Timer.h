@@ -13,31 +13,23 @@
 using namespace boost;
 
 
-
+template<class T>
 class event_timer
 {
 	   asio::io_service& io_service_;
-	   std::size_t tid_;
 	   std::size_t interval_;
 	   std::size_t tick_count_;
 	   asio::deadline_timer timer_;
-	   boost::posix_time::ptime before_;
-	   boost::posix_time::ptime after_;
-	   std::size_t total_diff_;
+	   T *m_poClient;
 
 private:
    void handle_timer_event(const system::error_code & error)
     {
        if (!error && interval_)
        {
-          after_ = boost::posix_time::microsec_clock::universal_time();
-          boost::posix_time::time_duration duration = after_ - before_;
-          total_diff_ += std::abs(interval_ - duration.total_milliseconds());
           ++tick_count_;
-          if (tick_count_ < 200)
-             initiate_timer();
-          else
-             std::cout << "Timer["<< tid_ <<"]\tTick["<< tick_count_ <<"] Average Diff: " << total_diff_ / (1.0 * tick_count_) << std::endl;
+    	   m_poClient->vOnTimeOut();
+          initiate_timer();
        }
     }
 
@@ -49,7 +41,6 @@ private:
          timer_.async_wait(
             boost::bind(&event_timer::handle_timer_event,this,
                asio::placeholders::error));
-         before_ = boost::posix_time::microsec_clock::universal_time();
       }
    }
 
@@ -58,14 +49,15 @@ public:
 
    event_timer(asio::io_service& io_service,
                const std::size_t& tid,
-               const std::size_t& interval = 5)
+               const std::size_t& interval = 5,
+               T * poClient=0)
    :io_service_(io_service),
      timer_(io_service),
-     tid_(tid),
      interval_(interval),
      tick_count_(0),
-     total_diff_(0)
+     m_poClient( poClient )
    {
+	   std::cout<<"\n Starting Location Subsystem Simulation";
    }
 
    void start()
@@ -83,8 +75,4 @@ public:
    {
       interval_ = milliseconds;
    }
-
-
-
-
 };

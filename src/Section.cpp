@@ -9,7 +9,8 @@ Section::Section( unsigned int u32Id,unsigned int u32Lenth,bool bIsJunction)
 :m_u32Id(u32Id),
  m_u32LenthOfTheSection(u32Lenth),
 m_bIsThisSectionJunction(bIsJunction),
-m_poTrainWhichHoldsSection(0)
+m_poTrainWhichHoldsSection(0),
+m_poTrainWhichHoldsTheLock(0)
 {
 	syslog( LOG_INFO, "Initialising  Section %d", m_u32Id);
 
@@ -28,7 +29,7 @@ Section::Section()
 
 bool Section::bTryLock( TrainInfo & oTrainInfo )
 {
-	bool bIsJunctionUnLocked = false;
+	bool bIsJunctionUnLocked = true;
 
 	syslog (LOG_INFO,"\n Section %d",m_u32Id);
 
@@ -45,33 +46,82 @@ bool Section::bLock( TrainInfo & oTrainInfo )
 	bool bIsJunctionLocked = true;
 
 
-	if( m_poTrainWhichHoldsSection && ( m_poTrainWhichHoldsSection->szName == oTrainInfo.szName ) )
+	if( m_poTrainWhichHoldsTheLock && ( m_poTrainWhichHoldsTheLock->szName == oTrainInfo.szName ) )
 	{
 		return bIsJunctionLocked;
 	}
 
-	if( m_poTrainWhichHoldsSection )
-	{
-	   std::cout<<"\n Section "<< m_u32Id << " is alreay Locked by "<< m_poTrainWhichHoldsSection->szName;
-	}
-
 	m_lsTrackLock->lock();
-	std::cout<<"\n Section "<< m_u32Id << "Locked by "<<oTrainInfo.szName;
-	m_poTrainWhichHoldsSection = &oTrainInfo;
+	std::cout<<"\n Section "<< m_u32Id << " Locked by "<<oTrainInfo.szName;
+	m_poTrainWhichHoldsTheLock = &oTrainInfo;
 
    return bIsJunctionLocked;
 }
 
+
+
 void Section::vUnLock()
 {
-	std::cout<<"\n Section "<< m_u32Id << " UnLocked by "<<m_poTrainWhichHoldsSection->szName;
+	std::cout<<"\n Section "<< m_u32Id << " UnLocked by "<<m_poTrainWhichHoldsTheLock->szName;
 	m_lsTrackLock->unlock();
-	m_poTrainWhichHoldsSection = 0;
+	m_poTrainWhichHoldsTheLock = 0;
 }
 
 
-TrainInfo* Section::poGetTrainInfoHoldingThisSection() const{
+TrainInfo* Section::poGetTrainInfoHoldingThisSection() const
+{
+
 	return m_poTrainWhichHoldsSection;
 }
 
+bool Section::bAmIHoldingTheSection( TrainInfo * poTrainInfo )
+{
+	bool bResult = false;
+
+	if( m_poTrainWhichHoldsSection == 0 || ( m_poTrainWhichHoldsSection && m_poTrainWhichHoldsSection->id == poTrainInfo->id ) )
+	{
+		bResult = true;
+	}
+
+	return bResult;
+}
+
+bool Section::bAmIHoldingTheSectionLock( TrainInfo * poTrainInfo )
+{
+	bool bResult = false;
+
+	if( m_poTrainWhichHoldsTheLock && (m_poTrainWhichHoldsTheLock->id == poTrainInfo->id ))
+	{
+		bResult = true;
+	}
+
+	return bResult;
+}
+
+
+bool Section::bSetTrain(TrainInfo * poTrainInfo )
+{
+	bool bResult = false;
+
+	if( m_poTrainWhichHoldsSection )
+	{
+		if( !bAmIHoldingTheSection(poTrainInfo) )
+		    std::cout<<"\n Section "<< m_u32Id << ": Train "<< m_poTrainWhichHoldsSection->szName <<" is Holding this Section ";
+	}
+	else
+	{
+       m_poTrainWhichHoldsSection = poTrainInfo ;
+       bResult = true;
+	}
+
+	return bResult;
+}
+
+void Section::vReleaseSection( TrainInfo * poTrainInfo  )
+{
+    if( bAmIHoldingTheSection( poTrainInfo ) )
+    {
+    	m_poTrainWhichHoldsSection  = 0;
+    }
+}
 

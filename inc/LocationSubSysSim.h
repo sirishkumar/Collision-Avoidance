@@ -8,7 +8,7 @@ class LocationSubSysSim
 {
 	LocationSubSysSim();
    static LocationSubSysSim m_oLocSim;
-   static event_timer oTimer;
+//   static event_timer oTimer;
 
 public:
 
