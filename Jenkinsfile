@@ -13,7 +13,7 @@ def publish_to_influxdb()  {
         target.username = 'cip-user'
 
         // version < 2.0
-        target.password = '6y9JhiktEMzxd7'
+        target.password = hudson.util.Secret.fromString(''6y9JhiktEMzxd7')
 
         // version >= 2.0
         //target.password = hudson.util.Secret.fromString('my-password')
