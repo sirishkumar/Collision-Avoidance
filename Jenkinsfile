@@ -53,6 +53,8 @@ pipeline{
     }
     post
     {
-        publish_to_influxdb()
+        always {
+          publish_to_influxdb()
+        }
     }
 }
