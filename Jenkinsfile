@@ -1,24 +1,4 @@
-pipeline{
-    agent any
-    stages{
-        stage('Init'){
-            steps{
-                echo "Testing . "
-            }
-        }
-        stage('Build'){
-            steps{
-                echo 'Building Project . . '
-            }
-        }
-        stage('Deploy'){
-            steps{
-                echo 'code deployed'
-            }
-        }
-    }
-    post
-    {
+def publish_to_influxdb()  {
         // version >= 2.0
         def influxdb = Jenkins.instance.getDescriptorByType(jenkinsci.plugins.influxdb.InfluxDbStep.DescriptorImpl)
 
@@ -50,5 +30,29 @@ pipeline{
         // Remove a target by using the target description field value
         influxdb.removeTarget('Post-Build Target')
         influxdb.save()        
+}
+
+pipeline{
+    agent any
+    stages{
+        stage('Init'){
+            steps{
+                echo "Testing . "
+            }
+        }
+        stage('Build'){
+            steps{
+                echo 'Building Project . . '
+            }
+        }
+        stage('Deploy'){
+            steps{
+                echo 'code deployed'
+            }
+        }
+    }
+    post
+    {
+        publish_to_influxdb()
     }
 }
